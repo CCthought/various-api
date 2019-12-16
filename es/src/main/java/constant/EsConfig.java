@@ -17,5 +17,15 @@ public class EsConfig {
      */
     public static final Integer ES_OPEN_PORT = 9200;
 
+    /**
+     * 第一个索引
+     */
+    public static final String FIRST_INDEX = "first-index";
+
+    /**
+     * 第一个索引的别名
+     */
+    public static final String FIRST_INDEX_ALIAS = "first-index-alias";
+
 
 }

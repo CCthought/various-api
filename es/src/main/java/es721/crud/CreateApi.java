@@ -1,4 +1,4 @@
-package es721.createclient;
+package es721.crud;
 
 import constant.EsConfig;
 import org.apache.http.HttpHost;
@@ -12,6 +12,7 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Date;
@@ -21,38 +22,23 @@ import java.util.Map;
 /**
  * @author zhouchengpei
  * date   2019/12/3 21:46
- * description  创建索引并创建文档
+ * description  1.创建ES高级客户端 2.创建索引 3.插入文档信息
+ * https://www.elastic.co/guide/en/elasticsearch/client/java-rest/7.2/java-rest-high-document-index.html
  */
-public class CreateClient {
-
-    /*public static void main(String[] args) throws IOException {
-        CreateClient createClient = new CreateClient();
-        RestHighLevelClient client = createClient.createClient();
-        IndexRequest request = createClient.indexRequestByMap();
-        IndexResponse response = client.index(request, RequestOptions.DEFAULT);
-        client.close();
-    }*/
-
-    public static void main(String[] args) throws IOException {
-        CreateClient createClient = new CreateClient();
-        RestHighLevelClient client = createClient.createClient();
-        CreateIndexRequest index = createClient.createIndex();
-        client.indices().create(index, RequestOptions.DEFAULT);
-        client.close();
-    }
+public class CreateApi {
 
     /**
      * 创建索引
      *
      * @return 索引
      */
-    private CreateIndexRequest createIndex() {
-        CreateIndexRequest request = new CreateIndexRequest("twitter_two");
+    public static CreateIndexRequest createIndex() {
+        CreateIndexRequest request = new CreateIndexRequest(EsConfig.FIRST_INDEX);
         request.settings(Settings.builder()
-                .put("index.number_of_shards", 3)
+                .put("index.number_of_shards", 1)
                 .put("index.number_of_replicas", 2));
         request.alias(
-                new Alias("twitter_alias")
+                new Alias(EsConfig.FIRST_INDEX_ALIAS)
         );
         return request;
     }
@@ -62,7 +48,7 @@ public class CreateClient {
      *
      * @return es 高级客户端
      */
-    private RestHighLevelClient createClient() {
+    public static RestHighLevelClient createClient() {
         return new RestHighLevelClient(
                 RestClient.builder(
                         new HttpHost(EsConfig.ES_URL, EsConfig.ES_OPEN_PORT, "http")));
@@ -71,7 +57,7 @@ public class CreateClient {
     /**
      * 最普通的方式，使用String字符串拼接json，构成一个文档
      */
-    private IndexRequest indexRequestByString() {
+    public static IndexRequest createIndexRequestByString() {
         IndexRequest request = new IndexRequest("first-index");
         request.id("1");
         String jsonString = "{" +
@@ -87,7 +73,7 @@ public class CreateClient {
      * Document source provided as a Map which gets automatically
      * converted to JSON format
      */
-    private IndexRequest indexRequestByMap() {
+    public static IndexRequest createIndexRequestByMap() {
         Map<String, Object> jsonMap = new HashMap<>(3);
         jsonMap.put("user", "kimchy");
         jsonMap.put("postDate", new Date());
@@ -102,7 +88,7 @@ public class CreateClient {
      *
      * @throws IOException .
      */
-    private IndexRequest indexRequestByBuilder() throws IOException {
+    public static IndexRequest createIndexRequestByBuilder() throws IOException {
         XContentBuilder builder = XContentFactory.jsonBuilder();
         builder.startObject();
         {
