@@ -1,6 +1,5 @@
 package es721.crud;
 
-import constant.EsConfig;
 import org.elasticsearch.action.get.GetRequest;
 import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
 
@@ -13,15 +12,16 @@ import org.elasticsearch.search.fetch.subphase.FetchSourceContext;
 public class GetApi {
 
     /**
+     * @param index 索引
+     * @param id 文档id
      * @return getRequest Api
      */
-    public static GetRequest createGetRequest() {
-        GetRequest getRequest = new GetRequest(EsConfig.FIRST_INDEX, "1");
+    public static GetRequest createGetRequest(String index, String id) {
+        GetRequest getRequest = new GetRequest(index, id);
 
-
-        getRequest.storedFields("message");
-//        getRequest.fetchSourceContext(new FetchSourceContext(true,new String[]{"postDate","message","user"},
-//                        new String[]{"postDate"}));
+//        getRequest.storedFields("message");
+        getRequest.fetchSourceContext(new FetchSourceContext(true, new String[]{"postDate", "message", "user"},
+                new String[]{"postDate"}));
         return getRequest;
     }
 
